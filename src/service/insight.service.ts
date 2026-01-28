@@ -1,0 +1,52 @@
+import { IInsight } from "../interface/insight.interface";
+import { InsightRepository } from "../repository/insight.repository";
+
+export class InsightService {
+  private repository = new InsightRepository();
+
+  async getAllInsights(filters: Partial<IInsight> = {}, page?: number, limit?: number): Promise<IInsight[]> {
+    return this.repository.findAll(filters, page, limit);
+  }
+
+  async countInsights(filters: Partial<IInsight> = {}): Promise<number> {
+    return this.repository.count(filters);
+  }
+
+  async getUniqueFieldValues(fields: (keyof IInsight)[]): Promise<Record<string, any[]>> {
+    return this.repository.getUniqueValues(fields);
+  }
+
+  // KPIs
+  async getTotalInsights(): Promise<number> {
+    return this.repository.count();
+  }
+
+  async getAvgIntensity(): Promise<number> {
+    return this.repository.avg("intensity");
+  }
+
+  async getAvgLikelihood(): Promise<number> {
+    return this.repository.avg("likelihood");
+  }
+
+  async getAvgRelevance(): Promise<number> {
+    return this.repository.avg("relevance");
+  }
+
+  // Chart Data
+  async getAvgIntensityByTopic(): Promise<{ topic: string; avgIntensity: number }[]> {
+    return this.repository.avgIntensityByTopic();
+  }
+
+  async getInsightsOverTime(): Promise<{ date: string; count: number }[]> {
+    return this.repository.insightsOverTime();
+  }
+
+  async getBubbleChartData(): Promise<{ relevance: number; likelihood: number; intensity: number; topic: string; sector: string }[]> {
+    return this.repository.bubbleChartData();
+  }
+
+  async getStackedBarData(): Promise<{ sector: string; topic: string; count: number }[]> {
+    return this.repository.stackedBarData();
+  }
+}
