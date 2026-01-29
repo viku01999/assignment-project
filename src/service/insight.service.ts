@@ -2,7 +2,7 @@ import { IInsight } from "../interface/insight.interface";
 import { InsightRepository } from "../repository/insight.repository";
 
 export class InsightService {
-  private repository = new InsightRepository();
+  private readonly repository = new InsightRepository();
 
   async getAllInsights(filters: Partial<IInsight> = {}, page?: number, limit?: number): Promise<IInsight[]> {
     return this.repository.findAll(filters, page, limit);
@@ -16,7 +16,6 @@ export class InsightService {
     return this.repository.getUniqueValues(fields);
   }
 
-  // KPIs
   async getTotalInsights(): Promise<number> {
     return this.repository.count();
   }
@@ -33,7 +32,6 @@ export class InsightService {
     return this.repository.avg("relevance");
   }
 
-  // Chart Data
   async getAvgIntensityByTopic(): Promise<{ topic: string; avgIntensity: number }[]> {
     return this.repository.avgIntensityByTopic();
   }

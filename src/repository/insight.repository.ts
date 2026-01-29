@@ -2,7 +2,6 @@ import { IInsight } from "../interface/insight.interface";
 import { InsightModel } from "../models/insight.schema";
 
 export class InsightRepository {
-    // Fetch all insights with optional filters and pagination
     findAll(filters: Partial<IInsight> = {}, page?: number, limit?: number): Promise<IInsight[]> {
         const query = { ...filters };
         let dbQuery = InsightModel.find(query);
@@ -14,12 +13,10 @@ export class InsightRepository {
         return dbQuery.lean();
     }
 
-    // Count documents matching filters
     count(filters: Partial<IInsight> = {}): Promise<number> {
         return InsightModel.countDocuments(filters);
     }
 
-    // Get unique values for multiple fields
     async getUniqueValues(fields: (keyof IInsight)[]): Promise<Record<string, any[]>> {
         const result: Record<string, any[]> = {};
 
@@ -31,7 +28,6 @@ export class InsightRepository {
         return result;
     }
 
-    // Safe average of numeric field
     async avg(field: keyof IInsight, filters: Partial<IInsight> = {}): Promise<number> {
         const result = await InsightModel.aggregate([
             { $match: filters },
@@ -49,7 +45,6 @@ export class InsightRepository {
         return result[0]?.avgValue || 0;
     }
 
-    // Avg intensity by topic for bar chart
     async avgIntensityByTopic(filters: Partial<IInsight> = {}): Promise<{ topic: string; avgIntensity: number }[]> {
         return InsightModel.aggregate([
             { $match: filters },
@@ -64,7 +59,6 @@ export class InsightRepository {
         ]);
     }
 
-    // Insights over time for line chart
     async insightsOverTime(filters: Partial<IInsight> = {}): Promise<{ date: string; count: number }[]> {
         return InsightModel.aggregate([
             { $match: filters },
@@ -74,7 +68,6 @@ export class InsightRepository {
         ]);
     }
 
-    // Bubble chart data (relevance vs likelihood, intensity as size)
     async bubbleChartData(filters: Partial<IInsight> = {}): Promise<{ relevance: number; likelihood: number; intensity: number; topic: string; sector: string }[]> {
         return InsightModel.aggregate([
             { $match: filters },
@@ -90,7 +83,6 @@ export class InsightRepository {
         ]);
     }
 
-    // Stacked bar chart data: topic by sector
     async stackedBarData(filters: Partial<IInsight> = {}): Promise<{ sector: string; topic: string; count: number }[]> {
         return InsightModel.aggregate([
             { $match: filters },
