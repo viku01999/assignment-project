@@ -90,4 +90,26 @@ export class InsightRepository {
             { $project: { _id: 0, sector: "$_id.sector", topic: "$_id.topic", count: 1 } },
         ]);
     }
+
+    async create(data: IInsight): Promise<IInsight> {
+        const insight = await InsightModel.create(data);
+        return insight.toObject();
+    }
+
+    async update(id: string, data: Partial<IInsight>): Promise<IInsight | null> {
+        return InsightModel.findByIdAndUpdate(
+            id,
+            { $set: data },
+            { new: true, runValidators: true }
+        ).lean();
+    }
+
+    async delete(id: string): Promise<IInsight | null> {
+        return InsightModel.findByIdAndDelete(id).lean();
+    }
+
+    async findById(id: string): Promise<IInsight | null> {
+        return InsightModel.findById(id).lean();
+    }
+
 }

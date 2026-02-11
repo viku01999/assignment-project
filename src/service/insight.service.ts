@@ -47,4 +47,21 @@ export class InsightService {
   async getStackedBarData(): Promise<{ sector: string; topic: string; count: number }[]> {
     return this.repository.stackedBarData();
   }
+
+  async createInsight(data: IInsight): Promise<IInsight> {
+    return this.repository.create(data);
+  }
+
+  async updateInsight(id: string, data: Partial<IInsight>): Promise<IInsight | null> {
+    return this.repository.update(id, data);
+  }
+
+  async deleteInsight(id: string): Promise<IInsight | null> {
+    return this.repository.delete(id);
+  }
+
+  async getInsightById(id: string): Promise<IInsight | null> {
+    return this.repository.findById(id);
+  }
+
 }

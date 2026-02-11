@@ -79,6 +79,94 @@ export const getInsights = async (
 };
 
 
+export const createInsights = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    const payload = req.body;
+
+    if (!payload || !payload.intensity) {
+        throw new ApiError(400, "Intensity is required");
+    }
+
+    const createdInsight = await insightService.createInsight(payload);
+
+    res.status(201).json(
+        new ApiResponse(201, "Insight created successfully", createdInsight)
+    );
+};
+
+
+export const getInsightsById = async (
+    req: Request<{ id: string }>,
+    res: Response
+): Promise<void> => {
+    const { id } = req.params;
+
+    if (!id) {
+        throw new ApiError(400, "Insight ID is required");
+    }
+
+    const insight = await insightService.getInsightById(id);
+
+    if (!insight) {
+        throw new ApiError(404, "Insight not found");
+    }
+
+    res.status(200).json(
+        new ApiResponse(200, "Insight fetched successfully", insight)
+    );
+};
+
+
+export const updateInsights = async (
+    req: Request<{ id: string }>,
+    res: Response
+): Promise<void> => {
+    const { id } = req.params;
+    const payload = req.body;
+
+    if (!id) {
+        throw new ApiError(400, "Insight ID is required");
+    }
+
+    if (!payload || Object.keys(payload).length === 0) {
+        throw new ApiError(400, "Update data is required");
+    }
+
+    const updatedInsight = await insightService.updateInsight(id, payload);
+
+    if (!updatedInsight) {
+        throw new ApiError(404, "Insight not found");
+    }
+
+    res.status(200).json(
+        new ApiResponse(200, "Insight updated successfully", updatedInsight)
+    );
+};
+
+
+export const deleteInsights = async (
+    req: Request<{ id: string }>,
+    res: Response
+): Promise<void> => {
+    const { id } = req.params;
+
+    if (!id) {
+        throw new ApiError(400, "Insight ID is required");
+    }
+
+    const deletedInsight = await insightService.deleteInsight(id);
+
+    if (!deletedInsight) {
+        throw new ApiError(404, "Insight not found");
+    }
+
+    res.status(200).json(
+        new ApiResponse(200, "Insight deleted successfully", deletedInsight)
+    );
+};
+
 
 export const getUniqueFilters = async (
     req: Request<{}, {}, {}, { fields?: string }>,
